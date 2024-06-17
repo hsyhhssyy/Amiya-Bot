@@ -5,6 +5,7 @@ from core.database import config, is_mysql
 from core.cosChainBuilder import COSQQGroupChainBuilder
 from typing import Union
 
+from amiyabot.adapters.tencent.qqGlobal import qq_global
 from amiyabot.adapters.tencent.qqGroup import qq_group, QQGroupChainBuilderOptions
 from amiyabot.adapters.cqhttp import cq_http
 from amiyabot.adapters.mirai import mirai_api_http
@@ -69,6 +70,10 @@ class BotAccounts(BotBaseModel):
             'onebot12': onebot12,
             'com_wechat': com_wechat,
         }
+        tx_adapters = {
+            'qq_group': qq_group,
+            'qq_global': qq_global,
+        }
 
         conf = {
             'appid': item.appid,
@@ -83,19 +88,19 @@ class BotAccounts(BotBaseModel):
                 http_port=item.http_port,
             )
 
-        if item.adapter == 'qq_group':
+        if item.adapter in tx_adapters:
             opt = QQGroupChainBuilderOptions(
                 item.host or '0.0.0.0',
                 item.http_port or 8086,
                 './resource/group_temp',
             )
             if cos_config.activate:
-                conf['adapter'] = qq_group(
+                conf['adapter'] = tx_adapters[item.adapter](
                     item.client_secret,
                     default_chain_builder=COSQQGroupChainBuilder(opt),
                 )
             else:
-                conf['adapter'] = qq_group(
+                conf['adapter'] = tx_adapters[item.adapter](
                     item.client_secret,
                     default_chain_builder_options=opt,
                 )
