@@ -14,8 +14,8 @@ def run_amiya(*tasks: Coroutine):
 
         sys.path += [
             os.path.dirname(sys.executable),
-            os.path.dirname('resource/env/python-dlls'),
-            os.path.dirname('resource/env/python-standard-lib.zip'),
+            os.path.abspath('resource/env/python-dlls'),
+            os.path.abspath('resource/env/python-standard-lib.zip'),
         ]
         loader = PluginsLoader(bot)
 
