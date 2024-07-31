@@ -24,6 +24,9 @@ class BotAccountModel(BotAppId):
     http_port: Optional[int] = None
     client_secret: Optional[str] = None
 
+    shard_index: int = 0
+    shards: int = 1
+
     start: int = 0
 
     def get_data(self):

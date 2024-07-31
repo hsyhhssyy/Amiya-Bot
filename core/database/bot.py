@@ -5,6 +5,7 @@ from core.database import config, is_mysql
 from core.cosChainBuilder import COSQQGroupChainBuilder
 from typing import Union
 
+from amiyabot.adapters.tencent.qqGuild import qq_guild_shards
 from amiyabot.adapters.tencent.qqGlobal import qq_global
 from amiyabot.adapters.tencent.qqGroup import qq_group, QQGroupChainBuilderOptions
 from amiyabot.adapters.cqhttp import cq_http
@@ -40,12 +41,15 @@ class BotAccounts(BotBaseModel):
     is_start: int = SmallIntegerField(default=1)
     is_main: int = SmallIntegerField(default=0)
     console_channel: str = CharField(null=True)
-    adapter: str = CharField(default='tencent')
+    adapter: str = CharField(default='qq_guild')
 
     host: str = CharField(null=True)
     ws_port: int = IntegerField(null=True)
     http_port: int = IntegerField(null=True)
     client_secret: str = CharField(null=True)
+
+    shard_index: int = SmallIntegerField(default=0)
+    shards: int = SmallIntegerField(default=1)
 
     @classmethod
     def get_all_account(cls):
@@ -71,6 +75,7 @@ class BotAccounts(BotBaseModel):
             'com_wechat': com_wechat,
         }
         tx_adapters = {
+            'qq_guild': qq_guild_shards,
             'qq_group': qq_group,
             'qq_global': qq_global,
         }
@@ -89,21 +94,29 @@ class BotAccounts(BotBaseModel):
             )
 
         if item.adapter in tx_adapters:
-            opt = QQGroupChainBuilderOptions(
-                item.host or '0.0.0.0',
-                item.http_port or 8086,
-                './resource/group_temp',
-            )
-            if cos_config.activate:
-                conf['adapter'] = tx_adapters[item.adapter](
-                    item.client_secret,
-                    default_chain_builder=COSQQGroupChainBuilder(opt),
-                )
+            adapter = tx_adapters[item.adapter]
+            shards = {
+                'shard_index': item.shard_index,
+                'shards': item.shards,
+            }
+            if item.adapter == 'qq_guild':
+                conf['adapter'] = adapter(**shards)
             else:
-                conf['adapter'] = tx_adapters[item.adapter](
-                    item.client_secret,
-                    default_chain_builder_options=opt,
+                opt = QQGroupChainBuilderOptions(
+                    item.host or '0.0.0.0', item.http_port or 8086, './resource/group_temp'
                 )
+                if cos_config.activate:
+                    conf['adapter'] = adapter(
+                        item.client_secret,
+                        default_chain_builder=COSQQGroupChainBuilder(opt),
+                        **shards,
+                    )
+                else:
+                    conf['adapter'] = adapter(
+                        item.client_secret,
+                        default_chain_builder_options=opt,
+                        **shards,
+                    )
 
         if item.adapter == 'websocket':
             conf['adapter'] = test_instance(item.host, item.ws_port)
