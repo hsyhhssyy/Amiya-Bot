@@ -71,7 +71,7 @@ async def send_to_console_channel(chain: Chain):
 async def heartbeat():
     for item in bot:
         await http_requests.get(
-            f'https://server.amiyabot.com:8020/heartbeat?appid={item.appid}',
+            f'{config.remote_config.remote.plugin}/heartbeat?appid={item.appid}',
             ignore_error=True,
         )
 
