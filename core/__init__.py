@@ -33,16 +33,6 @@ app.add_static_folder('/plugins', 'plugins')
 message_record = []
 
 
-class SourceServer(ChainBuilder):
-    @classmethod
-    async def get_image(cls, image):
-        if type(image) is bytes:
-            res = await http_requests.post_upload(f'{remote_config.remote.resource}/upload', image)
-            if res:
-                return remote_config.remote.resource + '/' + res.strip('"')
-        return image
-
-
 def set_prefix():
     bot.set_prefix_keywords([*prefix_conf.prefix_keywords])
 
@@ -61,17 +51,13 @@ async def send_to_console_channel(chain: Chain):
         instance = bot[item.appid]
 
         if item.console_channel and instance:
-            if isinstance(instance.instance, QQGuildBotInstance):
-                if not instance.private:
-                    chain.builder = SourceServer()
-
             await instance.send_message(chain, channel_id=item.console_channel)
 
 
 async def heartbeat():
     for item in bot:
         await http_requests.get(
-            f'{config.remote_config.remote.plugin}/heartbeat?appid={item.appid}',
+            f'{remote_config.remote.plugin}/heartbeat?appid={item.appid}',
             ignore_error=True,
         )
 

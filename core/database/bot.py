@@ -48,6 +48,7 @@ class BotAccounts(BotBaseModel):
     http_port: int = IntegerField(null=True)
     client_secret: str = CharField(null=True)
 
+    sandbox: int = SmallIntegerField(default=0)
     shard_index: int = SmallIntegerField(default=0)
     shards: int = SmallIntegerField(default=1)
 
@@ -100,7 +101,7 @@ class BotAccounts(BotBaseModel):
                 'shards': item.shards,
             }
             if item.adapter == 'qq_guild':
-                conf['adapter'] = adapter(**shards)
+                conf['adapter'] = adapter(**shards, sandbox=bool(item.sandbox))
             else:
                 opt = QQGroupChainBuilderOptions(
                     item.host or '0.0.0.0', item.http_port or 8086, './resource/group_temp'

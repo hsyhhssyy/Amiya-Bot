@@ -24,6 +24,7 @@ class BotAccountModel(BotAppId):
     http_port: Optional[int] = None
     client_secret: Optional[str] = None
 
+    sandbox: int = 0
     shard_index: int = 0
     shards: int = 1
 
