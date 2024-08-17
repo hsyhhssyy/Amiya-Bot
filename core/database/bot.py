@@ -1,13 +1,13 @@
 from amiyabot import AmiyaBot, KOOKBotInstance
 from amiyabot.database import *
-from core.config import cos_config
+from core.config import cos_config, penetration_config
 from core.database import config, is_mysql
 from core.cosChainBuilder import COSQQGroupChainBuilder
 from typing import Union
 
 from amiyabot.adapters.tencent.qqGuild import qq_guild_shards
 from amiyabot.adapters.tencent.qqGlobal import qq_global
-from amiyabot.adapters.tencent.qqGroup import qq_group, QQGroupChainBuilderOptions
+from amiyabot.adapters.tencent.qqGroup import qq_group, QQGroupChainBuilder, QQGroupChainBuilderOptions
 from amiyabot.adapters.cqhttp import cq_http
 from amiyabot.adapters.mirai import mirai_api_http
 from amiyabot.adapters.onebot.v11 import onebot11
@@ -103,9 +103,9 @@ class BotAccounts(BotBaseModel):
             if item.adapter == 'qq_guild':
                 conf['adapter'] = adapter(**shards, sandbox=bool(item.sandbox))
             else:
-                opt = QQGroupChainBuilderOptions(
-                    item.host or '0.0.0.0', item.http_port or 8086, './resource/group_temp'
-                )
+                port = item.http_port or 8086
+                opt = QQGroupChainBuilderOptions(item.host or '0.0.0.0', port, './resource/group_temp')
+
                 if cos_config.activate:
                     conf['adapter'] = adapter(
                         item.client_secret,
@@ -113,11 +113,19 @@ class BotAccounts(BotBaseModel):
                         **shards,
                     )
                 else:
-                    conf['adapter'] = adapter(
-                        item.client_secret,
-                        default_chain_builder_options=opt,
-                        **shards,
-                    )
+
+                    class PenetrationChainBuilder(QQGroupChainBuilder):
+                        @property
+                        def domain(self):
+                            return (
+                                penetration_config.ports[port] + '/resource'
+                                if port in penetration_config.ports
+                                else super().domain
+                            )
+
+                    cb = PenetrationChainBuilder(opt)
+
+                    conf['adapter'] = adapter(item.client_secret, default_chain_builder=cb, **shards)
 
         if item.adapter == 'websocket':
             conf['adapter'] = test_instance(item.host, item.ws_port)

@@ -13,6 +13,7 @@
 
 config/cos.yaml
 config/remote.yaml
+config/penetration.yaml
 main*.py
 
 *.pyc
