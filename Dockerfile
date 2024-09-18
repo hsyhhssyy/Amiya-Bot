@@ -18,7 +18,7 @@ RUN tar -zcvf amiyabot.tar.gz --exclude=/temp/.git --exclude=/temp/.vscode --exc
     --exclude=/temp/entrypoint.sh --exclude=/temp/install.sh --exclude=/temp/Dockerfile /temp/*
 
 # 安装依赖
-RUN pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
+RUN pip install -r requirements.txt
 RUN playwright install --with-deps chromium
 
 # 启动命令
