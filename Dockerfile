@@ -12,9 +12,10 @@ EXPOSE 8088
 
 # 拷贝当前目录下的所有文件到工作目录
 COPY requirements.txt /app
-COPY amiyabot.tar.gz /app
 COPY entrypoint.sh /app
-COPY entrypoint.py /app
+COPY . /temp
+RUN tar -zcvf amiyabot.tar.gz --exclude=/temp/.git --exclude=/temp/.vscode --exclude=/temp/.idea --exclude=/temp/docker.sh \
+    --exclude=/temp/entrypoint.sh --exclude=/temp/install.sh --exclude=/temp/Dockerfile /temp/*
 
 # 安装依赖
 RUN pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
