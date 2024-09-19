@@ -2,6 +2,8 @@ name: ci
 
 on:
   push:
+    branches: [ V6-master ]
+    paths: [ '.github/publish.txt' ]
 
 jobs:
   docker:
