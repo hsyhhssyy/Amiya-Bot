@@ -359,9 +359,11 @@ def sorted_dict(data: dict, *args, **kwargs):
 def text_to_pinyin(text: str):
     return ''.join([item[0] for item in pypinyin.pinyin(text, style=pypinyin.NORMAL)]).lower()
 
+
 def get_resource_dir():
     absolute_path = os.path.abspath('./resource')
     return absolute_path
+
 
 def get_plugin_dir():
     absolute_path = os.path.abspath('./plugins')
