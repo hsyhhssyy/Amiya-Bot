@@ -5,7 +5,8 @@ BOT_FOLDER=/amiyabot
 # step 1: 解压/覆盖bot文件
 if [ -f "/amiyabot.tar.gz" ]; then
     tar -zxvf /amiyabot.tar.gz -C /
-    mv /temp/* $BOT_FOLDER
+    cd /temp
+    mv * $BOT_FOLDER
     rm -rf /temp
 fi
 
