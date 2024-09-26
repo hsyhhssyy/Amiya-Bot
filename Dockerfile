@@ -15,10 +15,13 @@ COPY requirements.txt /app
 COPY entrypoint.sh /app
 
 # 临时目录
-COPY . /temp
-RUN tar -zcvf amiyabot.tar.gz --exclude=/temp/.git --exclude=/temp/.vscode --exclude=/temp/.idea --exclude=/temp/docker.sh \
-    --exclude=/temp/entrypoint.sh --exclude=/temp/install.sh --exclude=/temp/Dockerfile /temp/*
-RUN rm -rf /temp
+COPY . /app/temp
+WORKDIR /app/temp
+RUN tar -zcvf amiyabot.tar.gz --exclude=.git --exclude=.vscode --exclude=.idea --exclude=docker.sh \
+    --exclude=entrypoint.sh --exclude=install.sh --exclude=Dockerfile *
+RUN mv amiyabot.tar.gz /app
+WORKDIR /app
+RUN rm -rf temp
 
 # 安装依赖
 RUN pip install -r requirements.txt
