@@ -10,12 +10,15 @@ WORKDIR /app
 # 守护端口
 EXPOSE 8088
 
-# 拷贝当前目录下的所有文件到工作目录
+# 工作目录
 COPY requirements.txt /app
 COPY entrypoint.sh /app
+
+# 临时目录
 COPY . /temp
 RUN tar -zcvf amiyabot.tar.gz --exclude=/temp/.git --exclude=/temp/.vscode --exclude=/temp/.idea --exclude=/temp/docker.sh \
     --exclude=/temp/entrypoint.sh --exclude=/temp/install.sh --exclude=/temp/Dockerfile /temp/*
+RUN rm -rf /temp
 
 # 安装依赖
 RUN pip install -r requirements.txt
