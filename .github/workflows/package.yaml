@@ -55,4 +55,4 @@ jobs:
                 with:
                     context: .
                     push: true
-                    tags: amiyabot/amiyabot:latest
+                    tags: amiyabot/amiyabot:2.0.2, amiyabot/amiyabot:latest
