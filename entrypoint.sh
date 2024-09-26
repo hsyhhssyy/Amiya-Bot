@@ -2,9 +2,10 @@
 
 BOT_FOLDER=/amiyabot
 
+# step 1: 解压/覆盖bot文件
+tar -zxvf amiyabot.tar.gz -C $BOT_FOLDER
+
 if [ ! -f "$BOT_FOLDER/first_run" ]; then
-    # step 1: 解压bot本体
-    tar -zxvf amiyabot.tar.gz -C $BOT_FOLDER
     # step 2: 进入bot目录
     cd $BOT_FOLDER
     # step 3: 初始化配置文件
