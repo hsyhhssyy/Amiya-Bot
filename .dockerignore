@@ -1,3 +1,8 @@
 Dockerfile
-docker.sh
-install.sh
+dockersh/
+black.sh
+.git/
+.gitignore
+.gitmodules
+pluginsDev/
+pluginsServer/

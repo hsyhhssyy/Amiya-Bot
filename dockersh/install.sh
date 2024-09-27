@@ -161,7 +161,9 @@ while true; do
     read confirm
     if [ "$confirm" ]; then
         if [ "$confirm" = "y" ]; then
+            sudo docker pull amiyabot/amiyabot:latest
             eval $command
+            echo "服务已启动, 控制台地址: http://<本机ip>:$port"
             break
         elif [ "$confirm" = "n" ]; then
             echo "已取消"
