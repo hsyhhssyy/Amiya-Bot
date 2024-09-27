@@ -3,7 +3,7 @@
 BOT_FOLDER=/amiyabot
 
 # step 0: 备份config文件夹
-if [ -d "$BOT_FOLDER/config" ]; then
+if [ -d "$BOT_FOLDER/config/" ]; then
     cp -r $BOT_FOLDER/config $BOT_FOLDER/config.bak
 fi
 
