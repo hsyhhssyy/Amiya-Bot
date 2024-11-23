@@ -169,9 +169,10 @@ class OperatorConfig(BotBaseModel):
 class Pool(BotBaseModel):
     pool_name: Union[CharField, str] = CharField(unique=True)
 
-    pool_title: Union[CharField, str] = CharField(null=True, default='')
+    pool_uuid: Union[CharField, str] = CharField(null=True, default='')
     '''
-    卡池标题，为空或None时，使用卡池名，可用于防止卡池重名
+    用于区分同名非官方卡池，因为非官方卡池是可能会有同名的情况的
+    而数字Id不适用于远端数据库
     '''
     
     pool_description: Union[CharField, str] = CharField(null=True, default='')
@@ -213,19 +214,19 @@ class Pool(BotBaseModel):
     # pickup_s 为 五倍权重提升的任意干员，或者1倍权重但是会在本池抽出的限定干员，注意：其他fillin干员，权重为1
 
     pickup_6: Union[CharField, str] = CharField(null=True, default='')
-    pickup_6_rate: float = FloatField(null=True, default=0.3)
+    pickup_6_rate: float = FloatField(null=True, default=None)
     pickup_s: Union[CharField, str] = CharField(null=True, default='')
 
     pickup_5: Union[CharField, str] = CharField(null=True, default='')
-    pickup_5_rate: float = FloatField(null=True, default=0.5)
+    pickup_5_rate: float = FloatField(null=True, default=None)
     pickup_s_5: Union[CharField, str] = CharField(null=True, default='')
     
     pickup_4: Union[CharField, str] = CharField(null=True, default='')
-    pickup_4_rate: float = FloatField(null=True, default=0)
+    pickup_4_rate: float = FloatField(null=True, default=None)
     pickup_s_4: Union[CharField, str] = CharField(null=True, default='')
     
     pickup_3: Union[CharField, str] = CharField(null=True, default='')
-    pickup_3_rate: float = FloatField(null=True, default=0)
+    pickup_3_rate: float = FloatField(null=True, default=None)
     pickup_s_3: Union[CharField, str] = CharField(null=True, default='')
     
     pickup_2: Union[CharField, str] = CharField(null=True, default='')
