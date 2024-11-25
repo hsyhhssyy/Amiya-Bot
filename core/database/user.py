@@ -113,7 +113,10 @@ class UserGachaInfo(UserBaseModel):
     user_id: Union[ForeignKeyField, str] = ForeignKeyField(User, db_column='user_id', on_delete='CASCADE')
     coupon: int = IntegerField(default=50)
     gacha_break_even: int = IntegerField(default=0)
+    use_custom_gacha_pool: bool = BooleanField(default=False)
     gacha_pool: int = IntegerField(default=1)
+    custom_gacha_pool: str = CharField(default='')
+
 
 
 @table
