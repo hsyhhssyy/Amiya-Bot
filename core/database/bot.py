@@ -168,11 +168,76 @@ class OperatorConfig(BotBaseModel):
 @table
 class Pool(BotBaseModel):
     pool_name: Union[CharField, str] = CharField(unique=True)
-    pickup_6: Union[CharField, str] = CharField(null=True, default='')
-    pickup_5: Union[CharField, str] = CharField(null=True, default='')
-    pickup_4: Union[CharField, str] = CharField(null=True, default='')
-    pickup_s: Union[CharField, str] = CharField(null=True, default='')
+
+    pool_uuid: Union[CharField, str] = CharField(null=True, default='')
+    '''
+    用于区分同名非官方卡池，因为非官方卡池是可能会有同名的情况的
+    而数字Id不适用于远端数据库
+    '''
+    
+    pool_description: Union[CharField, str] = CharField(null=True, default='')
+    '''
+    卡池描述，为空或None时会根据卡池内容自动生成一个。
+    '''
+
+    pool_image: Union[CharField, str] = CharField(null=True, default='')
+    '''
+    卡池的题图
+    '''
+
     limit_pool: int = IntegerField()
+    '''
+    卡池类型
+    0: 常规寻访
+    1: 限定寻访
+    2: 联合寻访
+    3: 前路回响
+    4: 中坚寻访
+    5: 其他寻访
+    '''
+
+    is_classicOnly: bool = BooleanField(default=False)
+    '''
+    填充干员是否只包含中坚干员
+    '''
+    is_official: bool = BooleanField(default=True)
+    '''
+    是否为官方卡池
+    '''
+
+    # 卡池Up干员，和Up干员的加总概率，设置为100即为联合寻访（只有Up干员）
+    # 如果各个Up干员的rate不一样，可以在干员名后面用竖线分隔权重，权重可以为负数
+    # 例如：'干员1|1,干员2|5,干员3|5'
+    # 所有Up干员加权平分rate给出的概率。剩下的由常规干员填充
+    # 概率为小数，大于1的概率值会被转换为1
+    # 概率为None视为0
+    # pickup_s 为 五倍权重提升的任意干员，或者1倍权重但是会在本池抽出的限定干员，注意：其他fillin干员，权重为1
+
+    pickup_6: Union[CharField, str] = CharField(null=True, default='')
+    pickup_6_rate: float = FloatField(null=True, default=None)
+    pickup_s: Union[CharField, str] = CharField(null=True, default='')
+
+    pickup_5: Union[CharField, str] = CharField(null=True, default='')
+    pickup_5_rate: float = FloatField(null=True, default=None)
+    pickup_s_5: Union[CharField, str] = CharField(null=True, default='')
+    
+    pickup_4: Union[CharField, str] = CharField(null=True, default='')
+    pickup_4_rate: float = FloatField(null=True, default=None)
+    pickup_s_4: Union[CharField, str] = CharField(null=True, default='')
+    
+    pickup_3: Union[CharField, str] = CharField(null=True, default='')
+    pickup_3_rate: float = FloatField(null=True, default=None)
+    pickup_s_3: Union[CharField, str] = CharField(null=True, default='')
+    
+    pickup_2: Union[CharField, str] = CharField(null=True, default='')
+    pickup_2_rate: float = FloatField(null=True, default=0)
+    pickup_s_2: Union[CharField, str] = CharField(null=True, default='')
+    
+    pickup_1: Union[CharField, str] = CharField(null=True, default='')
+    pickup_1_rate: float = FloatField(null=True, default=0)
+    pickup_s_1: Union[CharField, str] = CharField(null=True, default='')
+
+    version: Union[CharField, str] = CharField(null=True, default='')
 
 
 @table
