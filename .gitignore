@@ -15,6 +15,7 @@ config/cos.yaml
 config/remote.yaml
 config/penetration.yaml
 main*.py
+start.zsh
 
 *.pyc
 *.spec
