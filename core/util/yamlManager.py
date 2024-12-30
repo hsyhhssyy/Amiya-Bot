@@ -44,10 +44,13 @@ class YamlManager:
         return True
 
 
-def init_config_file(file: str, build_cls):
+def init_config_file(file: str, build_cls, refresh=False):
     config = {}
     if os.path.exists(file):
-        config = YamlManager.read_yaml(file, _dict=True)
+        config = YamlManager.read_yaml(file, _dict=True, _refresh=refresh)
 
-    YamlManager.create_yaml(file, merge_dict(config, asdict(build_cls())), True)
+    if not refresh:
+        YamlManager.create_yaml(file, merge_dict(config, asdict(build_cls())), True)
+    else:
+        YamlManager.create_yaml(file, asdict(build_cls()), True)
     return YamlManager.read_yaml(file)
