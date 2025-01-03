@@ -50,9 +50,15 @@ jobs:
                 with:
                     username: ${{ secrets.DOCKERHUB_USERNAME }}
                     password: ${{ secrets.DOCKERHUB_TOKEN }}
+                    
+            - name: Get version from publish.txt
+              run: |
+                VERSION=$(cat .github/publish.txt | sed 's/^v//')
+                echo "VERSION=${VERSION}" >> $GITHUB_ENV
+                
             -   name: Build and push
                 uses: docker/build-push-action@v6
                 with:
                     context: .
                     push: true
-                    tags: amiyabot/amiyabot:6.5.8, amiyabot/amiyabot:latest
+                    tags: amiyabot/amiyabot:${{ env.VERSION }}, amiyabot/amiyabot:latest
